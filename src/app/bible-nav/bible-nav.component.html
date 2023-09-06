@@ -1,0 +1,38 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="!(isHandset$ | async)">
+    <mat-toolbar (click)="showHomepage()"><mat-icon>import_contacts</mat-icon>&nbsp; Home</mat-toolbar>
+    <mat-toolbar color="success" (click)="toggleTestament('old')">alte Testament</mat-toolbar>
+    <mat-nav-list *ngIf="showOldTest">
+      <a mat-list-item href="#" *ngFor="let bookAbbr of oldTestament" (click)="showBook(bookAbbr)">{{displayBook(bookAbbr)}}</a>
+    </mat-nav-list>
+    <mat-toolbar color="success" (click)="toggleTestament('new')">neue Testament</mat-toolbar>
+    <mat-nav-list *ngIf="showNewTest">
+      <a mat-list-item href="#" *ngFor="let bookAbbr of newTestament" (click)="showBook(bookAbbr)">{{displayBook(bookAbbr)}}</a>
+    </mat-nav-list>    
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Die Luther Bibel - 1912 Auflage</span>
+      <span style="flex: 1 1 auto;"></span>
+      <mat-icon style="padding: 0 14px;" (click)="showHelp()">help</mat-icon>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <div *ngIf="selectedBook;then show_chapters else show_homepage"></div>
+    <ng-template #show_chapters><app-bible-chapters [book]="selectedBook" [chapter]="selectedChapter"></app-bible-chapters></ng-template>
+    <ng-template #show_homepage><div class="div-bgimg">
+      <div class="div-space">&nbsp;</div>
+      <div class="div-text" *ngIf="randomVerse">{{randomVerse.verse}} &nbsp;<br/><i>{{displayBook(randomVerse.book)}} {{randomVerse.chapter_num}}：{{randomVerse.verse_num}}</i></div>
+    </div></ng-template>
+  </mat-sidenav-content>
+</mat-sidenav-container>
